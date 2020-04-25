@@ -68,7 +68,9 @@ class Route(models.Model):
     route_id = models.CharField(max_length=10)
     type_choice = [("Staff","Staff"),("Student","Student"),("Other","Other")]
     type = models.CharField(choices=type_choice,max_length=30)
+
     #no_of_stops .. can be calculated ?
+    #sample databases
 
 
 
