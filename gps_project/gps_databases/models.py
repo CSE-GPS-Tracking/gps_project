@@ -30,9 +30,13 @@ class Route(models.Model):
     route_id = models.CharField(max_length=10,primary_key=True)
     type_choice = [("Staff","Staff"),("Student","Student"),("Other","Other")]
     route_type = models.CharField(choices=type_choice,max_length=30)
-
+    from_clg_estimated_start_time = models.DateTimeField()
+	from_clg_estimated_reach_time = models.DateTimeField()
+	to_clg_estimated_start_time = models.DateTimeField()
+	to_clg_estimated_reach_time = models.DateTimeField()
     #no_of_stops .. can be calculated ?
     #sample databases
+
 
 
 class BusStop(models.Model):
@@ -45,10 +49,8 @@ class BusStop(models.Model):
 class BusTimes(models.Model):
 	route_id = models.ForeignKey(Route)
 	bus_stop_id = models.ForeignKey(BusStop)
-	from_clg_estimated_reach_time = models.DateTimeField()
-	from_clg_estimated_start_time = models.DateTimeField()
-	to_clg_estimated_reach_time = models.DateTimeField()
-	to_clg_estimated_start_time = models.DateTimeField()
+    est_arr_time = models.TimeField() 
+	
 
 
 class User(models.Model):
@@ -63,12 +65,20 @@ class User(models.Model):
     first_name= models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     phone = models.CharField(max_length=10)
+    address = models.CharField(max_length=100)
     email_id = models.CharField(max_length=40)
     route_id = models.ForeignKey(Route)
     bus_stop_id = models.ForeignKey(BusStop)
-    user_role_choices = [("Student","Student"),("Admin","Admin"),("Staff","Staff")]
-    user_role = models.CharField(choices=user_role_choices,max_length=30)
+    created_date = models.DateField() #DateTimeField()?
+    updated_date = models.DateField()
+    role_id = models.ForeignKey(Role)
+    sos_id = models.ForeignKey(Sos)
 
+
+class Role(models.Model):
+    role_id = models.CharField(max_length=10,primary_key=True)
+    role_name = models.CharField(max_length=20)
+    description = description = models.CharField(max_length=100)
 
 class Driver(models.Model):
     """
@@ -87,6 +97,12 @@ class Driver(models.Model):
     end_date= models.DateField()
 
 
+class Allocation(models.Model):
+    bus_id = models.ForeignKey(Bus)
+    route_id = models.ForeignKey(Route)
+    driver_id = models.ForeignKey(Driver)
+    
+
 class Tracking(models.Model):
 	bus_id = models.ForeignKey(Bus)
 	route_id = models.ForeignKey(Route)
@@ -94,23 +110,35 @@ class Tracking(models.Model):
 	trip_direction = models.CharField(max_length=20,choices=direction_choices)
 	date = models.DateTimeField()
 	start_time = models.DateTimeField()
-	current_latitude = models.FloatField()
-	current_longitude = models.FloatField()
+    fuel_perc = models.FloatField()
+    refill = models.BooleanField(default=False) 
+    """If in a particular trip, the bus's fuel percentage increases from low to high, the
+    refill attribute is set to be true as an indication of petrol being filled in that trip."""
 	end_time = models.DateTimeField()
 	status_choices = [("Ongoing","Ongoing"),("Terminated","Terminated"),("Completed","Completed")]
 	status = models.CharField(choices=status_choices,max_length=30)
-	driver_id = models.ForeignKey(Driver)
+	file_name = FileField()
+    """IN THIS FILE (EXCEL/CSV file), values such as time, lat, long, altitude, ignition, 
+    battery are stored at regular and small intervals"""
+    driver_id = models.ForeignKey(Driver)
 
 
 class AlertInfo(models.Model):
 	alert_code = models.CharField(max_length=10,primary_key=True)
 	alert_type = models.CharField(max_length=30)
+    #SMSalert_interval = models.IntegerField()
+    #SMSalert_Max = models.IntegerField()
+
 
 class Alert(models.Model):
 	alert_id = models.CharField(max_length=10,primary_key=True)
 	alert_code = models.ForeignKey(AlertInfo)
 	route_id = models.ForeignKey(Route)
 	date = models.DateField()
+    time = models.TimeField()
+    #status_choices = [("Resolved","Resolved"),("Pending","Pending")]
+    #status = models.CharField(choices=status_choices,max_length=30)
+    #reason = models.CharField(max_length=100)
 
 class TicketInfo(models.Model):
 	ticket_code = models.CharField(max_length=10,primary_key=True)
@@ -123,11 +151,16 @@ class Ticket(models.Model):
 	description = models.CharField(max_length=100)
 	route_id = models.ForeignKey(Route)
 	date = models.DateField()
+    time = models.TimeField()
+    #status_choices = [("Resolved","Resolved"),("Pending","Pending")]
+    #status = models.CharField(choices=status_choices,max_length=30)
 
-
-
-
-
+class Sos(models.Model):
+    sos_id = models.CharField(max_length=10,primary_key=True)
+    sos_name1 = models.CharField(max_length=30)
+    sos_phn_1 = models.CharField(max_length=10)
+    sos_name2 = models.CharField(max_length=30)
+    sos_phn_2 = models.CharField(max_length=10)
 
 
 
