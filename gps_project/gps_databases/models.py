@@ -143,9 +143,9 @@ class Alert(models.Model):
     route_id = models.ForeignKey(Route)
     time = models.TimeField()
     date = models.DateField()
-    #status_choices = [("Resolved","Resolved"),("Pending","Pending")]  
-    # #status = models.CharField(choices=status_choices,max_length=30)
-    # #reason = models.CharField(max_length=100)
+    status_choices = [("Resolved","Resolved"),("Pending","Pending")]  
+    status = models.CharField(choices=status_choices,max_length=30)
+    reason = models.CharField(max_length=100)
 
 class TicketInfo(models.Model):
 	ticket_code = models.CharField(max_length=10,primary_key=True)
@@ -159,8 +159,8 @@ class Ticket(models.Model):
     route_id = models.ForeignKey(Route)
     date = models.DateField()
     time = models.TimeField()
-    #status_choices = [("Resolved","Resolved"),("Pending","Pending")]
-    #status = models.CharField(choices=status_choices,max_length=30)
+    status_choices = [("Resolved","Resolved"),("Pending","Pending")]
+    status = models.CharField(choices=status_choices,max_length=30)
 
 
 
