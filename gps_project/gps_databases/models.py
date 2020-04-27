@@ -90,7 +90,7 @@ class Driver(models.Model):
 class Tracking(models.Model):
 	bus_id = models.ForeignKey(Bus)
 	route_id = models.ForeignKey(Route)
-	direction_choices = [("To College","To College"),("From College","From College")]
+	direction_choices = [("To College","To College"),("From College","From College"),("Other","Other")] #Other can be petrol,etc.
 	trip_direction = models.CharField(max_length=20,choices=direction_choices)
 	date = models.DateTimeField()
 	start_time = models.DateTimeField()
